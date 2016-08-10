@@ -1,13 +1,15 @@
 FROM ubuntu:14.04
 
 # Install all necessary Ubuntu packages
-RUN apt-get update && apt-get install -y python-dev python-setuptools libmagic-dev libtinfo-dev libzmq3-dev libcairo2-dev libpango1.0-dev libblas-dev liblapack-dev gcc g++
+RUN apt-get update && apt-get install -y python-dev python-setuptools libmagic-dev libtinfo-dev libzmq3-dev libcairo2-dev libpango1.0-dev libblas-dev liblapack-dev gcc g++ libncurses5-dev
 
 # Install Jupyter notebook
-RUN easy_install -U pip && pip install -U jupyter
+RUN easy_install -U pip && pip install -U jupyter && pip install -U RISE && \
+    jupyter-nbextension install rise --py --sys-prefix && \
+    jupyter-nbextension enable rise --py --sys-prefix
 
 # Install stack from the FPComplete repositories.
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 575159689BEFB442 && \
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442 && \
     echo 'deb http://download.fpcomplete.com/ubuntu trusty main' > /etc/apt/sources.list.d/fpco.list && \
     apt-get update && \
     apt-get install -y stack
